@@ -137,6 +137,27 @@ const links = [
 ]
 
 const IndexPage: React.FC<PageProps> = () => {
+  const [mockUpData, setMockupData] = React.useState([])
+
+  React.useEffect(() => {
+     fetch('/test').then((response: any) => {
+      if (response ) {
+        if(response.length > 0){
+          return response.json()
+        }
+      } else {
+        return
+      }
+    }).then((response: any) => {
+      if (response) {
+        setMockupData(response.id)
+        console.log(mockUpData)
+      } else {
+        return
+      }
+    })
+  }, [])
+
   return (
     <main style={pageStyles}>
       <h1 style={headingStyles}>

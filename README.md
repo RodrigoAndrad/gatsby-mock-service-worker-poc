@@ -1,49 +1,91 @@
 <p align="center">
   <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
-  </a>
+    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" /> </a> + <a href="https://mswjs.io/"><img alt="MSW" src="https://mswjs.io/_astro/msw.0b63bcd8.svg" width="60" /></a>
 </p>
 <h1 align="center">
-  Gatsby Minimal TypeScript Starter
+  Prova de conceito sobre o Mock Service Worker no Gatsby
 </h1>
 
-## 🚀 Quick start
+![captura de tela comprovando o funcionamento](./docs/assets/captura_funcionamento.png "Captura da implementação")
 
-1.  **Create a Gatsby site.**
+## 🚀 Passos iniciais
 
-    Use the Gatsby CLI to create a new site, specifying the minimal TypeScript starter.
+1.  **Crie uma aplicação Gatsby**
+
+    Use o Gatsby CLI para criar um novo site, specificando o inciador minimo TypeScript.
+
+    Com o yarn:
 
     ```shell
-    # create a new Gatsby site using the minimal TypeScript starter
+    # cria um novo site, specificando o inciador minimo TypeScript.
+    yarn init gatsby -- -ts
+    ```
+
+    Com o NPM:
+
+    ```shell
+    # cria um novo site, specificando o inciador minimo TypeScript.
     npm init gatsby -- -ts
     ```
 
-2.  **Start developing.**
+2.  **Instale o Mock Service Worker**
 
-    Navigate into your new site’s directory and start it up.
+    Com o yarn:
 
     ```shell
-    cd my-gatsby-site/
-    npm run develop
+    yarn add --develop msw
     ```
 
-3.  **Open the code and start customizing!**
+    Com o NPM:
 
-    Your site is now running at http://localhost:8000!
+    ```shell
+    npm install --develop msw
 
-    Edit `src/pages/index.tsx` to see your site update in real-time!
+3.  **Inizialize o Mock Service Worker**
 
-4.  **Learn more**
+    Com o yarn:
 
-    - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-    - [Tutorials](https://www.gatsbyjs.com/docs/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-    - [Guides](https://www.gatsbyjs.com/docs/how-to/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-    - [API Reference](https://www.gatsbyjs.com/docs/api-reference/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-    - [Plugin Library](https://www.gatsbyjs.com/plugins?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-    - [Cheat Sheet](https://www.gatsbyjs.com/docs/cheat-sheet/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
+     ```shell 
+     yarn msw init ./public/
+     ```
+    
+    Com o NPX
 
-## 🚀 Quick start (Netlify)
+    ```shell 
+     npx msw init ./public/
+    ```
 
-Deploy this starter with one click on [Netlify](https://app.netlify.com/signup):
+4.  **Mãos a obra**
 
-[<img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" />](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-minimal-ts)
+    **Crie na pasta src/mocks/handlers o arquivo handlers.ts com o seguinte conteúdo:**
+
+        import { http, HttpResponse } from "msw";
+
+        export const handlers = [
+            http.get('/test',()=>{
+                return HttpResponse.json({id: "teste"});
+            })
+        ]
+        
+    **Edite o arquivo gatsby-browser.js e inclua as seguintes linhas:**
+    
+        import { setupWorker } from 'msw/browser'
+        import { handlers } from './src/mocks/handlers';
+
+
+        if (process.env.NODE_ENV === 'development') {
+            async function startMSW() {
+                return setupWorker(...handlers)
+            };
+            startMSW().then((worker) => {
+                worker.start();
+            });
+        }
+        
+
+5.  **Aprenda mais**
+
+    - [Documentação do Gatsby](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
+    - [Documentation do MSW](https://mswjs.io/docs)
+    - [Tutoriais](https://www.youtube.com/watch?v=pP8FQnv6o7A)
+    
